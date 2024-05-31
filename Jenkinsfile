@@ -185,7 +185,7 @@ pipeline {
               cat "/etc/pki/ca-trust/extracted/pem/objsign-ca-bundle.pem"
               cat "/etc/pki/tls/certs/ca-bundle.crt" >> "/etc/pki/ca-trust/extracted/pem/objsign-ca-bundle.pem"
               cat "/etc/pki/ca-trust/extracted/pem/objsign-ca-bundle.pem"
-              dotnet nuget sign publish/*.nupkg --certificate-path /etc/pki/tls/certs/ca-bundle.crt
+              dotnet nuget sign publish/*.nupkg --certificate-path /etc/pki/tls/certs/ca-bundle.crt --timestamper http://timestamp.test
               dotnet nuget push publish/*.nupkg -k ${NUGET_API_KEY} -s "${NEXUS_URL}/repository/${NEXUS_REPOSITORY}"
             '''
           }
