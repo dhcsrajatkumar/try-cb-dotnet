@@ -193,8 +193,8 @@ pipeline {
               openssl req -new -key private.key -out csr.pem -subj "/C=US/ST=CA/L=Sacaremento/O=DHCS/OU=TECH/CN=DHCS"
               openssl req -x509 -days 3650 -key private.key -in csr.pem -out selfcert.crt
               
-              cat selfcert.pem >> "/etc/pki/ca-trust/extracted/pem/objsign-ca-bundle.pem"
-              dotnet nuget sign publish/*.nupkg --certificate-path selfcert.pem --timestamper http://timestamp.digicert.com
+              cat selfcert.crt >> "/etc/pki/ca-trust/extracted/pem/objsign-ca-bundle.pem"
+              dotnet nuget sign publish/*.nupkg --certificate-path selfcert.crt --timestamper http://timestamp.digicert.com
               dotnet nuget push publish/*.nupkg -k ${NUGET_API_KEY} -s "${NEXUS_URL}/repository/${NEXUS_REPOSITORY}"
             '''
           }
