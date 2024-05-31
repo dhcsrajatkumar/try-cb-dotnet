@@ -148,8 +148,7 @@ pipeline {
     stage('Restore Dependencies') {
       steps {
         container('cammismsbuild') {
-          // sh 'dotnet restore'
-          sh 'echo restore'
+          sh 'dotnet restore'
         }
       }
     }
@@ -183,7 +182,9 @@ pipeline {
         container('cammismsbuild') {
           withCredentials([string(credentialsId: 'nexus-nugetkey', variable: 'NUGET_API_KEY')]) {
             sh '''
-              cat /etc/pki/tls/certs/ca-bundle.crt >> /etc/pki/ca-trust/extracted/pem/objsign-ca-bundle.pem
+              cat "/etc/pki/ca-trust/extracted/pem/objsign-ca-bundle.pem"
+              cat "/etc/pki/tls/certs/ca-bundle.crt" >> "/etc/pki/ca-trust/extracted/pem/objsign-ca-bundle.pem"
+              cat "/etc/pki/ca-trust/extracted/pem/objsign-ca-bundle.pem"
               dotnet nuget sign publish/*.nupkg --certificate-path /etc/pki/tls/certs/ca-bundle.crt
               dotnet nuget push publish/*.nupkg -k ${NUGET_API_KEY} -s "${NEXUS_URL}/repository/${NEXUS_REPOSITORY}"
             '''
