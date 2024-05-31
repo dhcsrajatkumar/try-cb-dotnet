@@ -181,22 +181,30 @@ pipeline {
       steps {
         container('cammismsbuild') {
           withCredentials([string(credentialsId: 'nexus-nugetkey', variable: 'NUGET_API_KEY')]) {
-            sh '''
+            // sh '''
 
-              #cat "/etc/pki/ca-trust/extracted/pem/objsign-ca-bundle.pem"
-              #cat "/etc/pki/tls/certs/ca-bundle.crt" >> "/etc/pki/ca-trust/extracted/pem/objsign-ca-bundle.pem"
-              #cat "/etc/pki/ca-trust/extracted/pem/objsign-ca-bundle.pem"
-              #dotnet nuget sign publish/*.nupkg --certificate-path /etc/pki/tls/certs/ca-bundle.crt --timestamper http://timestamp.digicert.com
-              #openssl req -x509 -newkey rsa:4096 -keyout key.pem -out selfcert.pem -sha256 -days 3650 -nodes -subj "/C=XX/ST=CA/L=Sacaremento/O=DHCS/OU=TECH/CN=DHCS"
+            //   #cat "/etc/pki/ca-trust/extracted/pem/objsign-ca-bundle.pem"
+            //   #cat "/etc/pki/tls/certs/ca-bundle.crt" >> "/etc/pki/ca-trust/extracted/pem/objsign-ca-bundle.pem"
+            //   #cat "/etc/pki/ca-trust/extracted/pem/objsign-ca-bundle.pem"
+            //   #dotnet nuget sign publish/*.nupkg --certificate-path /etc/pki/tls/certs/ca-bundle.crt --timestamper http://timestamp.digicert.com
+            //   #openssl req -x509 -newkey rsa:4096 -keyout key.pem -out selfcert.pem -sha256 -days 3650 -nodes -subj "/C=XX/ST=CA/L=Sacaremento/O=DHCS/OU=TECH/CN=DHCS"
               
-              openssl genpkey -algorithm RSA -out private.key
-              openssl req -new -key private.key -out csr.pem -subj "/C=US/ST=CA/L=Sacaremento/O=DHCS/OU=TECH/CN=DHCS"
-              openssl req -x509 -days 3650 -key private.key -in csr.pem -out selfcert.crt
+            //   openssl genpkey -algorithm RSA -out private.key
+            //   openssl req -new -key private.key -out csr.pem -subj "/C=US/ST=CA/L=Sacaremento/O=DHCS/OU=TECH/CN=DHCS"
+            //   openssl req -x509 -days 3650 -key private.key -in csr.pem -out selfcert.crt
               
-              cat selfcert.crt >> "/etc/pki/ca-trust/extracted/pem/objsign-ca-bundle.pem"
-              dotnet nuget sign publish/*.nupkg --certificate-path selfcert.crt --timestamper http://timestamp.digicert.com
+            //   cat selfcert.crt >> "/etc/pki/ca-trust/extracted/pem/objsign-ca-bundle.pem"
+            //   dotnet nuget sign publish/*.nupkg --certificate-path selfcert.crt --timestamper http://timestamp.digicert.com
+            //   dotnet nuget push publish/*.nupkg -k ${NUGET_API_KEY} -s "${NEXUS_URL}/repository/${NEXUS_REPOSITORY}"
+            // '''
+
+
+            sh '''
+              dotnet nuget trust repository PackageRepository publish/*.nupkg --allow-untrusted-root
               dotnet nuget push publish/*.nupkg -k ${NUGET_API_KEY} -s "${NEXUS_URL}/repository/${NEXUS_REPOSITORY}"
+
             '''
+
           }
         }
       }
