@@ -182,6 +182,7 @@ pipeline {
         container('cammismsbuild') {
           withCredentials([string(credentialsId: 'nexus-nugetkey', variable: 'NUGET_API_KEY')]) {
             sh '''
+              dotnet nuget sign publish/*.nupkg --certificate-path /etc/pki/tls/certs/ca-bundle.crt
               dotnet nuget push publish/*.nupkg -k ${NUGET_API_KEY} -s "${NEXUS_URL}/repository/${NEXUS_REPOSITORY}"
             '''
           }
