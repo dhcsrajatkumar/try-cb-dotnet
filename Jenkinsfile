@@ -134,40 +134,40 @@ pipeline {
       }
     }
 
-    stage('Setup HTTPS Certificates') {
-      steps {
-        container('cammismsbuild') { 
-          echo 'Cleaning existing HTTPS certificates'
-          sh 'dotnet dev-certs https --clean'
-          echo 'Trusting new HTTPS certificates'
-          sh 'dotnet dev-certs https --trust'
-        }
-      }
-    }
+    // stage('Setup HTTPS Certificates') {
+    //   steps {
+    //     container('cammismsbuild') { 
+    //       echo 'Cleaning existing HTTPS certificates'
+    //       sh 'dotnet dev-certs https --clean'
+    //       echo 'Trusting new HTTPS certificates'
+    //       sh 'dotnet dev-certs https --trust'
+    //     }
+    //   }
+    // }
 
-    stage('Restore Dependencies') {
-      steps {
-        container('cammismsbuild') {
-          sh 'dotnet restore'
-        }
-      }
-    }
+    // stage('Restore Dependencies') {
+    //   steps {
+    //     container('cammismsbuild') {
+    //       sh 'dotnet restore'
+    //     }
+    //   }
+    // }
 
-    stage('Build') {
-      steps {
-        container('cammismsbuild') {
-          sh 'dotnet build --configuration Release'
-        }
-      }
-    }
+    // stage('Build') {
+    //   steps {
+    //     container('cammismsbuild') {
+    //       sh 'dotnet build --configuration Release'
+    //     }
+    //   }
+    // }
 
-    stage('Publish') {
-      steps {
-        container('cammismsbuild') {
-          sh 'dotnet publish --configuration Release --output ./publish'
-        }
-      }
-    }
+    // stage('Publish') {
+    //   steps {
+    //     container('cammismsbuild') {
+    //       sh 'dotnet publish --configuration Release --output ./publish'
+    //     }
+    //   }
+    // }
 
     stage('Pack NuGet Package') {
       steps {
@@ -200,7 +200,7 @@ pipeline {
 
 
             sh '''
-              dotnet nuget trust repository PackageRepository publish/*.nupkg --allow-untrusted-root
+              #dotnet nuget trust repository PackageRepository publish/*.nupkg --allow-untrusted-root
               dotnet nuget push publish/*.nupkg -k ${NUGET_API_KEY} -s "${NEXUS_URL}/repository/${NEXUS_REPOSITORY}"
 
             '''
