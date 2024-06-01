@@ -201,7 +201,7 @@ pipeline {
 
             sh '''
               #dotnet nuget trust repository PackageRepository publish/*.nupkg --allow-untrusted-root
-              dotnet nuget push publish/*.nupkg -k ${NUGET_API_KEY} -s "${NEXUS_URL}/repository/${NEXUS_REPOSITORY}"
+              dotnet nuget push publish/*.nupkg -k ${NUGET_API_KEY} -s "${NEXUS_URL}/repository/${NEXUS_REPOSITORY}" --allow-untrusted-root
 
             '''
 
