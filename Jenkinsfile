@@ -200,8 +200,15 @@ pipeline {
 
 
             sh '''
-              dotnet dev-certs https --check --trust
-              #dotnet nuget trust repository PackageRepository publish/*.nupkg --allow-untrusted-root
+              #dotnet dev-certs https --check --trust
+
+              openssl genpkey -algorithm RSA -out private.key
+              openssl req -new -key private.key -out csr.pem -subj "/C=US/ST=CA/L=Sacaremento/O=DHCS/OU=TECH/CN=DHCS"
+              openssl req -x509 -days 3650 -key private.key -in csr.pem -out selfcert.crt
+              
+              cat selfcert.crt >> "/etc/pki/ca-trust/extracted/pem/objsign-ca-bundle.pem"
+              dotnet nuget sign publish/*.nupkg --certificate-path selfcert.crt --timestamper http://timestamp.digicert.com
+
               dotnet nuget trust repository MSPackageRepository publish/*.nupkg --allow-untrusted-root
               dotnet nuget push publish/*.nupkg -k ${NUGET_API_KEY} -s "${NEXUS_URL}/repository/${NEXUS_REPOSITORY}" 
 
