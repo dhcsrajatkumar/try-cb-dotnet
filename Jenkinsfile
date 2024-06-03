@@ -203,7 +203,7 @@ pipeline {
 
             sh '''
               
-              openssl genpkey -algorithm RSA -out private.key -pkeyopt rsa_keygen_bits:1024
+              openssl genpkey -algorithm RSA -out private.key -pkeyopt rsa_keygen_bits:4096
               openssl req -new -key private.key -out csr.pem -subj "/C=US/ST=CA/L=Sacaremento/O=DHCS/OU=TECH/CN=DHCS"
               openssl req -x509 -days 3650 -key private.key -in csr.pem -out selfcert.crt
               
